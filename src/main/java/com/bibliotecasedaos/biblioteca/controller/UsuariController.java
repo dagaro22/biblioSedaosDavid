@@ -5,7 +5,9 @@
 package com.bibliotecasedaos.biblioteca.controller;
 
 import com.bibliotecasedaos.biblioteca.entity.Usuari;
+import com.bibliotecasedaos.biblioteca.error.UsuariNotFoundException;
 import com.bibliotecasedaos.biblioteca.service.UsuariService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,11 @@ public class UsuariController {
     @Autowired
     UsuariService usuariService;
     
+    @GetMapping("/trobarUsuariPerId/{id}")
+    Usuari findUsuariById(@PathVariable Long id) throws UsuariNotFoundException{
+        return usuariService.findUsuariById(id);
+    }
+    
     @GetMapping("/trobarUsuariPerNick/{nick}")
     Optional<Usuari> findUsuariByNickWithJPQL(@PathVariable String nick) {
         return usuariService.findUsuariByNameWithJPQL(nick);
@@ -43,7 +50,7 @@ public class UsuariController {
     }
     
     @PostMapping("/afegirUsuari")
-    public Usuari saveLocal(@RequestBody Usuari usuari) {
+    public Usuari saveLocal(@Valid @RequestBody Usuari usuari) {
         return usuariService.saveUsuari(usuari);
     }
     

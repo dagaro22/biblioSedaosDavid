@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.service;
 
 import com.bibliotecasedaos.biblioteca.entity.Usuari;
+import com.bibliotecasedaos.biblioteca.error.UsuariNotFoundException;
 import com.bibliotecasedaos.biblioteca.repository.UsuariRepository;
 import java.util.List;
 import java.util.Objects;
@@ -93,6 +94,15 @@ public class UsuariServiceImpl implements UsuariService{
     @Override
     public Optional<Usuari> findByNif(String nif) {
         return usuariRepository.findByNif(nif);
+    }
+
+    @Override
+    public Usuari findUsuariById(Long id) throws UsuariNotFoundException{
+        Optional<Usuari> usuari = usuariRepository.findById(id);
+        if (!usuari.isPresent()) {
+            throw new UsuariNotFoundException("Usuari no trobat.");
+        }
+        return usuari.get();
     }
     
 }

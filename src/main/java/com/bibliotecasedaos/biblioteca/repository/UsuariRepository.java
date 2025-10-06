@@ -8,11 +8,13 @@ import com.bibliotecasedaos.biblioteca.entity.Usuari;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author dg
  */
+@Repository
 public interface UsuariRepository extends JpaRepository<Usuari, Long>{
     
     //Consulta con JPQL

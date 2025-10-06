@@ -7,6 +7,7 @@ package com.bibliotecasedaos.biblioteca.controller;
 import com.bibliotecasedaos.biblioteca.entity.Usuari;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author dg
  */
 @RestController
+@RequestMapping("/api/greeting")
 public class GreetingController {
     
     private static final String template = "Hello, %s";
     private final AtomicLong counter = new AtomicLong();
     
-    @GetMapping("/greeting")
-    public Usuari helloWorld(@RequestParam(value = "name", defaultValue = "World") String name) {
-        //return new Usuari(counter.incrementAndGet(), String.format(template, name));
-        return null;
+    @GetMapping("/sayHello")
+    public String sayHello() {
+        return "hello from API Biblioteca";
     }
 }
