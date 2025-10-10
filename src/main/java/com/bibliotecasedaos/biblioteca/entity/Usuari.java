@@ -27,6 +27,14 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author dg
  */
+/**
+ * Entitat que representa un usuari en la base de dades de la biblioteca.
+ * Aquesta classe implementa {@code UserDetails} per a la integració amb
+ * Spring Security, proporcionant la informació necessària per a
+ * l'autenticació i l'autorització.
+ *
+ * @author David García Rodríguez
+ */
 @Entity
 @Table(name = "usuaris")
 @Data
@@ -40,7 +48,7 @@ public class Usuari implements UserDetails{
     private long id;
     @NotBlank(message = "Per favor afegeix un nick")
     private String nick;
-    @Length(min = 9, max = 9)
+    //@Length(min = 9, max = 9)
     private String nif;
     private String nom;
     private String cognom1;
@@ -54,12 +62,18 @@ public class Usuari implements UserDetails{
     private String password;
     private int rol;
     
+    /*
     @Enumerated(EnumType.ORDINAL)
     private Role role;
-
+*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        
+        String roleName = "USER";
+        if (this.rol == 2) {
+            roleName = "ADMIN";
+        }
+        return List.of(new SimpleGrantedAuthority(roleName));
     }
 
     @Override

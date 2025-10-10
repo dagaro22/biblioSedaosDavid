@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author dg
  */
+@RequestMapping("/biblioteca/usuaris")
 @RestController
 public class UsuariController {
     
@@ -44,15 +46,17 @@ public class UsuariController {
         return usuariService.findByNif(nif);
     }
     
+    @GetMapping("/trobarUsuariPerNifJ/{nif}")
+    Optional<Usuari> findUsuariByNifWith(@PathVariable String nif) {
+        return usuariService.findUsuariByNifWithJPQL(nif);
+    }
+    
+    
     @GetMapping("/llistarUsuaris")
     public List<Usuari> findAllUsuaris() {
         return usuariService.findAllUsuaris();
     }
     
-    @PostMapping("/afegirUsuari")
-    public Usuari saveLocal(@Valid @RequestBody Usuari usuari) {
-        return usuariService.saveUsuari(usuari);
-    }
     
     @PutMapping("/actualitzarUsuari/{id}")
     public Usuari updateUsuari(@PathVariable Long id,@RequestBody Usuari usuari) {

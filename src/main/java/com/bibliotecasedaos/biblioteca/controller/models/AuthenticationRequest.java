@@ -10,8 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * Objecte de Sol·licitud (Request) utilitzat per a l'autenticació
+ * d'un usuari.
+ * Conté els atributs necessàries per verificar la identitat de l'usuari.
  *
- * @author dg
+ * @author David García Rodríguez
  */
 @Data
 @Builder
@@ -19,6 +22,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthenticationRequest {
     
+    /** Pseudónim d'usuari únic. */
     private String nick;
+    /** Contrasenya de l'usuari. */
     private String password;
 }

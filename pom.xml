@@ -83,6 +83,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+                <dependency>
+                        <groupId>org.springframework.security</groupId>
+                        <artifactId>spring-security-test</artifactId>
+                        <scope>test</scope>
+                </dependency>
 	</dependencies>
 
 	<build>
@@ -90,6 +95,26 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+                        <!-- Plugin Javadoc añadido para garantizar la generación de documentación y el JAR para el IDE -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>javadoc</goal>
+							<!-- NECESARIO: Este goal crea el archivo biblioteca-0.0.1-SNAPSHOT-javadoc.jar 
+							que el IDE necesita para mostrar el Javadoc en contexto. -->
+							<goal>jar</goal> 
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- Establece el idioma de la documentación a español para caracteres especiales -->
+					<locale>es</locale>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -41,40 +41,40 @@ public class UsuariServiceImpl implements UsuariService{
             usuariDb.setRol(usuari.getRol());
         }
         if (Objects.nonNull(usuari.getCarrer()) && !"".equalsIgnoreCase(usuari.getCarrer())) {
-            usuariDb.setNif(usuari.getNif());
+            usuariDb.setCarrer(usuari.getNif());
         }
         if (Objects.nonNull(usuari.getCognom1()) && !"".equalsIgnoreCase(usuari.getCognom1())) {
-            usuariDb.setNif(usuari.getCognom1());
+            usuariDb.setCognom1(usuari.getCognom1());
         }            
         if (Objects.nonNull(usuari.getCognom2()) && !"".equalsIgnoreCase(usuari.getCognom2())) {
-            usuariDb.setNif(usuari.getCognom2());
+            usuariDb.setCognom2(usuari.getCognom2());
         }
         if (Objects.nonNull(usuari.getCp()) && !"".equalsIgnoreCase(usuari.getCp())) {
-            usuariDb.setNif(usuari.getCp());
+            usuariDb.setCp(usuari.getCp());
         }
         if (Objects.nonNull(usuari.getEmail()) && !"".equalsIgnoreCase(usuari.getEmail())) {
-            usuariDb.setNif(usuari.getEmail());
+            usuariDb.setEmail(usuari.getEmail());
         }
         if (Objects.nonNull(usuari.getLocalitat()) && !"".equalsIgnoreCase(usuari.getLocalitat())) {
-            usuariDb.setNif(usuari.getLocalitat());
+            usuariDb.setLocalitat(usuari.getLocalitat());
         }
         if (Objects.nonNull(usuari.getNick()) && !"".equalsIgnoreCase(usuari.getNick())) {
-            usuariDb.setNif(usuari.getNick());
+            usuariDb.setNick(usuari.getNick());
         }
         if (Objects.nonNull(usuari.getNif()) && !"".equalsIgnoreCase(usuari.getNif())) {
             usuariDb.setNif(usuari.getNif());
         }
         if (Objects.nonNull(usuari.getNom()) && !"".equalsIgnoreCase(usuari.getNom())) {
-            usuariDb.setNif(usuari.getNom());
+            usuariDb.setNom(usuari.getNom());
         }
         if (Objects.nonNull(usuari.getPassword()) && !"".equalsIgnoreCase(usuari.getPassword())) {
-            usuariDb.setNif(usuari.getPassword());
+            usuariDb.setPassword(usuari.getPassword());
         }
         if (Objects.nonNull(usuari.getProvincia()) && !"".equalsIgnoreCase(usuari.getProvincia())) {
-            usuariDb.setNif(usuari.getProvincia());
+            usuariDb.setProvincia(usuari.getProvincia());
         }
         if (Objects.nonNull(usuari.getTlf()) && !"".equalsIgnoreCase(usuari.getTlf())) {
-            usuariDb.setNif(usuari.getTlf());
+            usuariDb.setTlf(usuari.getTlf());
         }
         
         return usuariRepository.save(usuariDb);
@@ -103,6 +103,11 @@ public class UsuariServiceImpl implements UsuariService{
             throw new UsuariNotFoundException("Usuari no trobat.");
         }
         return usuari.get();
+    }
+
+    @Override
+    public Optional<Usuari> findUsuariByNifWithJPQL(String nif) {
+        return usuariRepository.findUsuariByNifWithJPQL(nif);
     }
     
 }

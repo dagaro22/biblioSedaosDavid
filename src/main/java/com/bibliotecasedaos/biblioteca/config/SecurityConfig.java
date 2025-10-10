@@ -18,9 +18,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-/**
- *
- * @author dg
+
+/** 
+ * Configuració central de Spring Security.
+ * * Defineix la cadena de filtres de seguretat, habilita JWT (Estat sense sessió)
+ * i autoritza l'accés als 'endpoints' públics.
+ * 
+ * @author David García Rodríguez
  */
 @Configuration
 @EnableWebSecurity
@@ -28,9 +32,19 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @EnableMethodSecurity
 public class SecurityConfig {
     
+    /**Filtre per JWT. */
     private final JwtFilter jwtFilter;
+    /**Proveïdor d'autenticació. */
     private final AuthenticationProvider authenticationProvider;
     
+    /**
+     * David García Rodríguez
+     * Estableix els filtres de seguretat de l'aplicació.
+     * * Deshabilita CSRF, requereix autenticació i estableix rutes públiques
+     * @param httpSecurity Configuració de seguretat.
+     * @return Cadena de filtres.
+     * @throws Exception Si hi ha un error de configuració.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         
@@ -44,12 +58,17 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
     
+    /**
+     * David García Rodríguez
+     * Defineix les rutes que no necesiten autenticació (públics).
+     * @return Un {@link RequestMatcher} combinat amb els 'endpoints'.
+     */
     private RequestMatcher publicEndPoints() {
-        return new OrRequestMatcher(
-                new AntPathRequestMatcher("/llistarUsuaris"),
+        return new OrRequestMatcher(           
                 new AntPathRequestMatcher("/trobarUsuariPerNick/**"),
                 new AntPathRequestMatcher("/api/auth/**"),
-                new AntPathRequestMatcher("/biblioteca/auth/**")
+                new AntPathRequestMatcher("/biblioteca/auth/**"),
+                new AntPathRequestMatcher("/biblioteca/usuaris/trobarUsuariPerId/**")
                         );
     }
 }
