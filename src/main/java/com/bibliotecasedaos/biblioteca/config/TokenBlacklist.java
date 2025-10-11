@@ -33,7 +33,7 @@ public class TokenBlacklist {
      * @param tokenId L'ID del token a comprovar.
      * @return True si el token està revocat, false en cas contrari.
      */
-    public boolean isTokenBlacklisted(String tokenId) {
+    public boolean isBlacklisted(String tokenId) {
         return revokedTokens.contains(tokenId);
     }
 }

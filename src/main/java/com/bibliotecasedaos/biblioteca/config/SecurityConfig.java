@@ -51,6 +51,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicEndPoints()).permitAll()
                 .anyRequest().authenticated())
+                .logout(logout -> logout.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -65,10 +66,9 @@ public class SecurityConfig {
      */
     private RequestMatcher publicEndPoints() {
         return new OrRequestMatcher(           
-                new AntPathRequestMatcher("/trobarUsuariPerNick/**"),
-                new AntPathRequestMatcher("/api/auth/**"),
-                new AntPathRequestMatcher("/biblioteca/auth/**"),
-                new AntPathRequestMatcher("/biblioteca/usuaris/trobarUsuariPerId/**")
+
+                new AntPathRequestMatcher("/biblioteca/auth/login"),
+                new AntPathRequestMatcher("/biblioteca/auth/afegirUsuari")
                         );
     }
 }

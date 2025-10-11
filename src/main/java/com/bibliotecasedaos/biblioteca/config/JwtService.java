@@ -9,10 +9,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -43,14 +45,17 @@ public class JwtService {
     
     /**
      * David García Rodríguez
-     * Genera un JWT signat amb claims, subject, emissió i expiració.
+     * Genera un JWT signat amb claims, id, subject, emissió i expiració.
      * @param extraClaims Claims.
      * @param userDetails Detalls de l'usuari.
      * @return El JWT signat.
      */
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        String tokenId = UUID.randomUUID().toString(); 
+        
         return Jwts.builder()
                 .setClaims(extraClaims)
+                .setId(tokenId)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -121,7 +126,8 @@ public class JwtService {
      */
     private Key getSignInKey() {
         
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        //byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
     

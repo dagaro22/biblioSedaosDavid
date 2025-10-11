@@ -6,6 +6,7 @@ package com.bibliotecasedaos.biblioteca.config;
 
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter{
     private final UserDetailsService userDetailService;
     /** Servei per fer la gestiódels JWT.*/
     private final JwtService jwtService;
-    //Nuevo------------------------------
+    
     private final TokenBlacklist tokenBlacklist;
     
     /**
@@ -53,63 +54,56 @@ public class JwtFilter extends OncePerRequestFilter{
      * @throws IOException Si ocorre un error d'entrada/sortida.
      */
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, 
-            @NonNull HttpServletResponse response, 
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
-        
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userNick;
-        
-        
-        if (authHeader == null || !authHeader.startsWith("Bearer")) {
+        String jwt = null;
+        String userNick = null;
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+
         jwt = authHeader.substring(7);
-        
-        // Extracció i comprovació de la llista negra
+
         try {
-            Claims claims = jwtService.extractAllClaims(jwt);
-            String tokenId = claims.getId(); 
+            
+            userNick = jwtService.getUserName(jwt);
 
-            if (tokenBlacklist.isTokenBlacklisted(tokenId)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token revocat (Logout previ).");
-                return;
-            }
-
-            userNick = jwtService.getUserName(jwt); 
-        } catch (Exception e) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
-        
-    try{    
-        //jwt = authHeader.substring(7);
-        //userNick = jwtService.getUserName(jwt);
-        
-        /**Comprova que l'usuari existeix i no hi ha autenticació prèvia, en cas exitos crea i estableix el token_seguretat*/
-        if (userNick != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailService.loadUserByUsername(userNick);
-           
-            if (jwtService.validateToken(jwt, userDetails)) {
+            /**Comprova que l'usuari existeix i no hi ha autenticació prèvia, en cas exitos crea i estableix el token_seguretat*/
+            if (userNick != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                Claims claims = jwtService.extractAllClaims(jwt);
+                String tokenId = claims.getId();
+
+                if (tokenBlacklist.isBlacklisted(tokenId)) { 
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token revocat (Logout previ).");
+                    return; // Detiene la cadena si está en la lista negra
+                }
+
+                UserDetails userDetails = this.userDetailService.loadUserByUsername(userNick);
+
+                if (jwtService.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
+        } catch (ExpiredJwtException e) {
+            System.err.println("Token Expired: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("JWT Validation Error: " + e.getMessage());
         }
-    } catch (Exception e) {
-        System.err.println(e.getMessage());
-    }
-        filterChain.doFilter((request), response);
         
+        filterChain.doFilter(request, response);
     }
     
 }
