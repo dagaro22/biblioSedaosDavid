@@ -10,6 +10,7 @@ import com.bibliotecasedaos.biblioteca.controller.models.AuthenticationRequest;
 import com.bibliotecasedaos.biblioteca.controller.models.RegisterRequest;
 import com.bibliotecasedaos.biblioteca.entity.Role;
 import com.bibliotecasedaos.biblioteca.entity.Usuari;
+import com.bibliotecasedaos.biblioteca.error.NickAlreadyExistsException;
 import com.bibliotecasedaos.biblioteca.repository.UsuariRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,7 +49,12 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public AuthResponse register(RegisterRequest request) {
         
-        var user = Usuari.builder()
+        if (usuariRepository.existsByNick(request.getNick())) {
+            // Llança la nostra excepció de negoci
+            throw new NickAlreadyExistsException("El nick '" + request.getNick() + "' ja existeix a la base de dades. Si us plau, escolliu-ne un altre.");
+        }
+        
+        var user = Usuari.builder()              
                 .nick(request.getNick())
                 .nif(request.getNif())
                 .nom(request.getNom())
@@ -67,7 +73,15 @@ public class AuthServiceImpl implements AuthService{
         usuariRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
-                .token(jwtToken).build();
+                .token(jwtToken)
+                .nom(user.getNom())
+                .cognom1(user.getCognom1())
+                .cognom2(user.getCognom2())
+                .rol(user.getRol())
+                .id(user.getId())
+                .build();
+                
+                
     }
 
     /**

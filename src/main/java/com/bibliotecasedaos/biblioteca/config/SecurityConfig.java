@@ -68,7 +68,8 @@ public class SecurityConfig {
         return new OrRequestMatcher(           
 
                 new AntPathRequestMatcher("/biblioteca/auth/login"),
-                new AntPathRequestMatcher("/biblioteca/auth/afegirUsuari")
+                new AntPathRequestMatcher("/biblioteca/auth/afegirUsuari"),
+                new AntPathRequestMatcher("/error")
                         );
     }
 }

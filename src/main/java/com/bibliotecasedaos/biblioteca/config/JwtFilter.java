@@ -42,6 +42,12 @@ public class JwtFilter extends OncePerRequestFilter{
     
     private final TokenBlacklist tokenBlacklist;
     
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // Omet el filtre JWT per a qualsevol cosa que comenci per /biblioteca/auth
+        return request.getServletPath().startsWith("/biblioteca/auth/afegirUsuari");
+    }
+    
     /**
      * David García Rodríguez
      * Extreu i valida el token de la capçalera 'Authorization' de les peticions al servidor.

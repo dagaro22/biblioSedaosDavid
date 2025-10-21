@@ -10,6 +10,7 @@ import com.bibliotecasedaos.biblioteca.controller.models.AuthResponse;
 import com.bibliotecasedaos.biblioteca.controller.models.AuthenticationRequest;
 import com.bibliotecasedaos.biblioteca.controller.models.RegisterRequest;
 import com.bibliotecasedaos.biblioteca.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 //@RequestMapping("/api/auth/")
-@RequestMapping("/biblioteca/auth/")
+@RequestMapping("/biblioteca/auth")
 @RequiredArgsConstructor
 public class AuthController {
     
@@ -45,7 +46,7 @@ public class AuthController {
      * @return {@code ResponseEntity<AuthResponse>} amb l'estat HTTP 200 (OK) i al cos un JWT Token, id, nom, cognom1, cognom2, rol.
      */
     @PostMapping("/afegirUsuari")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.register(request));
     }
     

@@ -17,16 +17,12 @@ import java.util.Optional;
  */
 public interface UsuariService {
     
-    /**
-     * Obté una llista amb tots els usuaris en la base de dades.
-     * @return Una {@code List} de tots els {@link Usuari}.
-     */
     List<Usuari> findAllUsuaris();
     
     Usuari saveUsuari(Usuari usauri);
-    Usuari updateUsuari(Long id, Usuari usuari);
+    Usuari updateUsuari(Long id, Usuari usuari) throws UsuariNotFoundException;
     void deleteUsuari(Long id);
-    Optional<Usuari> findUsuariByNameWithJPQL(String nick);
+    Optional<Usuari> findUsuariByNameWithJPQL(String nick) throws UsuariNotFoundException;
     Optional<Usuari> findUsuariByNifWithJPQL(String nif);
     Optional<Usuari> findByNif(String nif);
     Usuari findUsuariById(Long id) throws UsuariNotFoundException;

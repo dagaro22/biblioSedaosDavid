@@ -4,6 +4,7 @@
  */
 package com.bibliotecasedaos.biblioteca;
 
+import com.bibliotecasedaos.biblioteca.config.TokenBlacklist;
 import com.bibliotecasedaos.biblioteca.controller.AuthController;
 import com.bibliotecasedaos.biblioteca.controller.models.AuthResponse;
 import com.bibliotecasedaos.biblioteca.controller.models.AuthenticationRequest;
@@ -23,6 +24,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import org.springframework.context.annotation.Import;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 //Es deshabiliten els filtres de seguretat per provar endpoints públics.
 @AutoConfigureMockMvc(addFilters = false) 
+@Import(TokenBlacklist.class)
 class AuthControllerTest {
 
     @Autowired
