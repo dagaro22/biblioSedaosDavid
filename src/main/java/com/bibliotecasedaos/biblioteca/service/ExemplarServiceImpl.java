@@ -6,6 +6,7 @@ package com.bibliotecasedaos.biblioteca.service;
 
 import com.bibliotecasedaos.biblioteca.entity.Exemplar;
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
+import com.bibliotecasedaos.biblioteca.error.ExemplarNotFoundException;
 import com.bibliotecasedaos.biblioteca.repository.ExemplarRepository;
 import java.util.List;
 import java.util.Objects;
@@ -33,8 +34,9 @@ public class ExemplarServiceImpl implements ExemplarService{
     }
 
     @Override
-    public Exemplar updateExemplar(Long id, Exemplar exemplar) {
-        Exemplar exemplarDb = exemplarRepository.findById(id).get();
+    public Exemplar updateExemplar(Long id, Exemplar exemplar) throws ExemplarNotFoundException {
+        Exemplar exemplarDb = exemplarRepository.findById(id)
+                .orElseThrow(() -> new ExemplarNotFoundException("Exemplar amb ID " + id + " no trobat."));
         if (Objects.nonNull(exemplar.getReservat()) && !"".equalsIgnoreCase(exemplar.getReservat())) {
             exemplarDb.setReservat(exemplar.getReservat());
         }
@@ -47,18 +49,29 @@ public class ExemplarServiceImpl implements ExemplarService{
     }
 
     @Override
-    public void deleteExemplar(Long id) {
+    public void deleteExemplar(Long id) throws ExemplarNotFoundException {
+        exemplarRepository.findById(id)
+                .orElseThrow(() -> new ExemplarNotFoundException("Exemplar amb ID " + id + " no trobat."));
+        
         exemplarRepository.deleteById(id);
     }
 
     @Override
-    public Exemplar findExemplarById(Long id) {
-        return exemplarRepository.findById(id).get();
+    public Exemplar findExemplarById(Long id) throws ExemplarNotFoundException{
+        return exemplarRepository.findById(id)
+                .orElseThrow(() -> new ExemplarNotFoundException("Exemplar amb ID " + id + " no trobat."));
     }
 
     @Override
-    public List<Exemplar> findExemplarsLliures() {
-        return exemplarRepository.findExemplarsLliures();
+    public List<Exemplar> findExemplarsLliuresByTitolOrAutor(String titol, String autorNom) {
+
+        if (Objects.nonNull(titol) && !titol.isBlank()) {
+            return exemplarRepository.findExemplarsLliuresByLlibreTitol(titol);
+        } else if (Objects.nonNull(autorNom) && !autorNom.isBlank()) {
+            return exemplarRepository.findExemplarsLliuresByAutorNom(autorNom);          
+        } else {
+            return exemplarRepository.findExemplarsLliures();
+        }
     }
     
 }

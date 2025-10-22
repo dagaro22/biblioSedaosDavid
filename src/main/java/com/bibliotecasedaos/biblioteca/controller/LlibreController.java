@@ -5,9 +5,11 @@
 package com.bibliotecasedaos.biblioteca.controller;
 
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
+import com.bibliotecasedaos.biblioteca.error.LlibreNotFoundException;
 import com.bibliotecasedaos.biblioteca.service.LlibreService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,19 +34,27 @@ public class LlibreController {
         return llibreService.findAllLlibres();
     }
     
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/afegirLlibre")
+    public Llibre saveLlibre(@RequestBody Llibre llibre) {
+        return llibreService.saveLlibre(llibre);
+    }
+    
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/actualitzarLlibre/{id}")
-    public Llibre updateLlibre(@PathVariable Long id,@RequestBody Llibre llibre) {
+    public Llibre updateLlibre(@PathVariable Long id,@RequestBody Llibre llibre) throws LlibreNotFoundException {
         return llibreService.updateLlibre(id, llibre);
     }
     
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/eliminarLlibre/{id}")
-    public String deleteLlibre(@PathVariable Long id) {
+    public String deleteLlibre(@PathVariable Long id) throws LlibreNotFoundException {
         llibreService.deleteLlibre(id);
         return "Llibre esborrat";
     }
     
     @GetMapping("/trobarLlibrePerId/{id}")
-    Llibre findLlibreById(@PathVariable Long id) {
+    Llibre findLlibreById(@PathVariable Long id) throws LlibreNotFoundException {
         return llibreService.findLlibreById(id);
     }
 }

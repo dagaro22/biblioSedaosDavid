@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.repository;
 
 import com.bibliotecasedaos.biblioteca.entity.Autor;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AutorRepository extends JpaRepository<Autor, Long>{
     
+    /**
+     * Recupera una llista de tots els autors, ordenats alfabèticament pel seu nom (nom).
+     *
+     * @return Llista de totes les entitats {@code Autor} ordenades pel camp 'nom' de forma ascendent.
+     */
+    List<Autor> findAllByOrderByNomAsc();
     
 }

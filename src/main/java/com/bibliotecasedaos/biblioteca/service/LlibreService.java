@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.service;
 
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
+import com.bibliotecasedaos.biblioteca.error.LlibreNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public interface LlibreService {
     List<Llibre> findAllLlibres();
     
     Llibre saveLlibre(Llibre llibre);
-    Llibre updateLlibre(Long id, Llibre llibre);
-    void deleteLlibre(Long id);   
-    Llibre findLlibreById(Long id);
+    Llibre updateLlibre(Long id, Llibre llibre) throws LlibreNotFoundException;
+    void deleteLlibre(Long id) throws LlibreNotFoundException;   
+    Llibre findLlibreById(Long id) throws LlibreNotFoundException;
 }

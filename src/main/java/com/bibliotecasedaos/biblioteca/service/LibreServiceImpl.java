@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.service;
 
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
+import com.bibliotecasedaos.biblioteca.error.LlibreNotFoundException;
 import com.bibliotecasedaos.biblioteca.repository.LlibreRepository;
 import java.util.List;
 import java.util.Objects;
@@ -21,12 +22,11 @@ public class LibreServiceImpl implements LlibreService{
     @Autowired
     LlibreRepository llibreRepository;
     
-    
-            
     @Override
     public List<Llibre> findAllLlibres() {
-        return llibreRepository.findAll();
+        return llibreRepository.findAllByOrderByTitolAsc(); 
     }
+
 
     @Override
     public Llibre saveLlibre(Llibre llibre) {
@@ -34,23 +34,30 @@ public class LibreServiceImpl implements LlibreService{
     }
 
     @Override
-    public Llibre updateLlibre(Long id, Llibre llibre) {
-        Llibre llibreDb = llibreRepository.findById(id).get();
-        if (Objects.nonNull(llibre.getTitol()) && !"".equalsIgnoreCase(llibre.getTitol())) {
+    public Llibre updateLlibre(Long id, Llibre llibre) throws LlibreNotFoundException {
+
+        Llibre llibreDb = llibreRepository.findById(id)
+             .orElseThrow(() -> new LlibreNotFoundException("Llibre amb ID " + id + " no trobat."));
+        
+        if (Objects.nonNull(llibre.getTitol()) && !llibre.getTitol().isBlank()) {
             llibreDb.setTitol(llibre.getTitol());
         }
         
         return llibreRepository.save(llibreDb);
     }
 
+   
     @Override
-    public void deleteLlibre(Long id) {
+    public void deleteLlibre(Long id) throws LlibreNotFoundException {
+        llibreRepository.findById(id)
+            .orElseThrow(() -> new LlibreNotFoundException("Llibre amb ID " + id + " no trobat."));
+        
         llibreRepository.deleteById(id);
     }
 
     @Override
-    public Llibre findLlibreById(Long id) {
-        return llibreRepository.findById(id).get();
+    public Llibre findLlibreById(Long id) throws LlibreNotFoundException {
+        return llibreRepository.findById(id)
+            .orElseThrow(() -> new LlibreNotFoundException("Llibre amb ID " + id + " no trobat."));
     }
-    
 }

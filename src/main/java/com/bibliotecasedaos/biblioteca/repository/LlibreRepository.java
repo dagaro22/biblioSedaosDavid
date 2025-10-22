@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.repository;
 
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LlibreRepository extends JpaRepository<Llibre,Long>{
     
+    List<Llibre> findAllByOrderByTitolAsc();
 }

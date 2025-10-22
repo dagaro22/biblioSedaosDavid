@@ -6,15 +6,18 @@ package com.bibliotecasedaos.biblioteca.controller;
 
 import com.bibliotecasedaos.biblioteca.entity.Exemplar;
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
+import com.bibliotecasedaos.biblioteca.error.ExemplarNotFoundException;
 import com.bibliotecasedaos.biblioteca.service.ExemplarService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,23 +37,34 @@ public class ExemplarController {
     }
     
     @GetMapping("/llistarExemplarsLliures")
-    public List<Exemplar> findAllExemplarsLliures() {
-        return exemplarService.findExemplarsLliures();
+    public List<Exemplar> findExemplarsByTitolOrAutor(
+        @RequestParam(required = false) String titol,
+        @RequestParam(required = false, name = "autor") String autorNom 
+    ) {
+        return exemplarService.findExemplarsLliuresByTitolOrAutor(titol, autorNom);
     }
     
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/afegirExemplar")
+    public Exemplar saveExemplar(@RequestBody Exemplar exemplar) {
+        return exemplarService.saveExemplar(exemplar);
+    }
+    
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/actualitzarExemplar/{id}")
-    public Exemplar updateExemplar(@PathVariable Long id,@RequestBody Exemplar exemplar) {
+    public Exemplar updateExemplar(@PathVariable Long id,@RequestBody Exemplar exemplar) throws ExemplarNotFoundException {
         return exemplarService.updateExemplar(id, exemplar);
     }
     
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/eliminarExemplar/{id}")
-    public String deleteExemplar(@PathVariable Long id) {
+    public String deleteExemplar(@PathVariable Long id) throws ExemplarNotFoundException {
         exemplarService.deleteExemplar(id);
         return "Exemplar esborrat";
     }
     
     @GetMapping("/trobarExemplarPerId/{id}")
-    Exemplar findExemplarById(@PathVariable Long id) {
+    Exemplar findExemplarById(@PathVariable Long id) throws ExemplarNotFoundException {
         return exemplarService.findExemplarById(id);
     }
 }

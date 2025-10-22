@@ -29,11 +29,31 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     //Maneja UsuariNotFoundException (404 Not Found)
     @ExceptionHandler(UsuariNotFoundException.class)
     public ResponseEntity<ErrorMessage> usuariNotFoundException(UsuariNotFoundException exception) {
-        // Simplificat per consistència
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
+    //Maneja AutorNotFoundException (404 Not Found)
+    @ExceptionHandler(AutorNotFoundException.class)
+    public ResponseEntity<ErrorMessage> autorNotFoundException(AutorNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
+    //Maneja AutorNotFoundException (404 Not Found)
+    @ExceptionHandler(LlibreNotFoundException.class)
+    public ResponseEntity<ErrorMessage> llibreNotFoundException(LlibreNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
+    //Maneja ExemplarNotFoundException (404 Not Found)
+    @ExceptionHandler(ExemplarNotFoundException.class)
+    public ResponseEntity<ErrorMessage> exemplarNotFoundException(ExemplarNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
     //Maneja els errors de validació de camp (@Valid)
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
