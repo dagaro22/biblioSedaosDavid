@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +26,9 @@ public class UsuariServiceImpl implements UsuariService {
 
     @Autowired
     UsuariRepository usuariRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     /**
      * Recupera una llista de tots els usuaris emmagatzemats a la base de dades.
@@ -69,37 +73,40 @@ public class UsuariServiceImpl implements UsuariService {
         if (Objects.nonNull(usuari.getCarrer()) && !usuari.getCarrer().isBlank()) {
             usuariDb.setCarrer(usuari.getCarrer());
         }
-        if (Objects.nonNull(usuari.getCognom1()) && !"".equalsIgnoreCase(usuari.getCognom1())) {
+        if (Objects.nonNull(usuari.getCognom1()) && !usuari.getCognom1().isBlank()) {
             usuariDb.setCognom1(usuari.getCognom1());
         }            
         if (Objects.nonNull(usuari.getCognom2()) && !"".equalsIgnoreCase(usuari.getCognom2())) {
             usuariDb.setCognom2(usuari.getCognom2());
         }
-        if (Objects.nonNull(usuari.getCp()) && !"".equalsIgnoreCase(usuari.getCp())) {
+        if (Objects.nonNull(usuari.getCp()) && !usuari.getCp().isBlank()) {
             usuariDb.setCp(usuari.getCp());
         }
-        if (Objects.nonNull(usuari.getEmail()) && !"".equalsIgnoreCase(usuari.getEmail())) {
+        if (Objects.nonNull(usuari.getEmail()) && !usuari.getEmail().isBlank()) {
             usuariDb.setEmail(usuari.getEmail());
         }
-        if (Objects.nonNull(usuari.getLocalitat()) && !"".equalsIgnoreCase(usuari.getLocalitat())) {
+        if (Objects.nonNull(usuari.getLocalitat()) && !usuari.getLocalitat().isBlank()) {
             usuariDb.setLocalitat(usuari.getLocalitat());
         }
-        if (Objects.nonNull(usuari.getNick()) && !"".equalsIgnoreCase(usuari.getNick())) {
+        if (Objects.nonNull(usuari.getNick()) && !usuari.getNick().isBlank()) {
             usuariDb.setNick(usuari.getNick());
         }
-        if (Objects.nonNull(usuari.getNif()) && !"".equalsIgnoreCase(usuari.getNif())) {
+        if (Objects.nonNull(usuari.getNif()) && !usuari.getNif().isBlank()) {
             usuariDb.setNif(usuari.getNif());
         }
-        if (Objects.nonNull(usuari.getNom()) && !"".equalsIgnoreCase(usuari.getNom())) {
+        if (Objects.nonNull(usuari.getNom()) && !usuari.getNom().isBlank()) {
             usuariDb.setNom(usuari.getNom());
         }
-        if (Objects.nonNull(usuari.getPassword()) && !"".equalsIgnoreCase(usuari.getPassword())) {
-            usuariDb.setPassword(usuari.getPassword());
+        if (Objects.nonNull(usuari.getPassword()) && !usuari.getPassword().isBlank()) {
+            String rawPassword = usuari.getPassword().trim();
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            usuariDb.setPassword(encodedPassword);   
         }
-        if (Objects.nonNull(usuari.getProvincia()) && !"".equalsIgnoreCase(usuari.getProvincia())) {
+        
+        if (Objects.nonNull(usuari.getProvincia()) && !usuari.getProvincia().isBlank()) {
             usuariDb.setProvincia(usuari.getProvincia());
         }
-        if (Objects.nonNull(usuari.getTlf()) && !"".equalsIgnoreCase(usuari.getTlf())) {
+        if (Objects.nonNull(usuari.getTlf()) && !usuari.getTlf().isBlank()) {
             usuariDb.setTlf(usuari.getTlf());
         }
         
