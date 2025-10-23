@@ -50,7 +50,7 @@ public class ExemplarController {
         return exemplarService.saveExemplar(exemplar);
     }
     
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/actualitzarExemplar/{id}")
     public Exemplar updateExemplar(@PathVariable Long id,@RequestBody Exemplar exemplar) throws ExemplarNotFoundException {
         return exemplarService.updateExemplar(id, exemplar);

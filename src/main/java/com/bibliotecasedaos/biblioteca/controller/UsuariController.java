@@ -42,7 +42,8 @@ public class UsuariController {
      * @return L'objecte {@link Usuari} trobat.
      * @throws UsuariNotFoundException Si no es troba cap usuari amb l'ID donat.
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    
+    @PreAuthorize("hasAuthority('ADMIN') or (isAuthenticated() and @usuariServiceImpl.isResourceOwner(#id, principal))")
     @GetMapping("/trobarUsuariPerId/{id}")
     Usuari findUsuariById(@PathVariable Long id) throws UsuariNotFoundException{
         return usuariService.findUsuariById(id);

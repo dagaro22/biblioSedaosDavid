@@ -68,7 +68,7 @@ public class UsuariServiceImpl implements UsuariService {
             .orElseThrow(() -> new UsuariNotFoundException("Usuari amb ID " + id + " no trobat."));
         
         if (Integer.valueOf(usuari.getRol()) != null && usuari.getRol() >= 0 && usuari.getRol() <= 1) {
-            usuariDb.setRol(usuari.getRol());
+            //usuariDb.setRol(usuari.getRol());
         }
         if (Objects.nonNull(usuari.getCarrer()) && !usuari.getCarrer().isBlank()) {
             usuariDb.setCarrer(usuari.getCarrer());
@@ -164,6 +164,36 @@ public class UsuariServiceImpl implements UsuariService {
     @Override
     public Optional<Usuari> findUsuariByNifWithJPQL(String nif) {
         return usuariRepository.findUsuariByNifWithJPQL(nif);
+    }
+    
+    public boolean isResourceOwner(Long requestedId, Object principal) {
+    
+        String authenticatedNick = null;
+
+        //Extreure el nom d'usuari (nick) de l'objecte principal de manera segura
+        if (principal instanceof String) {
+            authenticatedNick = (String) principal;
+        } else if (principal instanceof Usuari) { 
+            authenticatedNick = ((Usuari) principal).getNick();
+        }
+    
+        // Si no s'ha pogut extreure el nick (o és anònim/buit), denega.
+        if (authenticatedNick == null || authenticatedNick.isBlank() || "ANONYMOUS".equals(authenticatedNick)) {
+            return false;
+        }
+    
+        //Cerca l'usuari autenticat pel nick a la base de dades
+
+        Optional<Usuari> usuariOptional = usuariRepository.findUsuariByNickWithJPQL(authenticatedNick);
+    
+        if (usuariOptional.isEmpty()) {
+            return false;
+        }
+    
+        //Compara els IDs
+        Long currentUserId = usuariOptional.get().getId();
+    
+        return Objects.equals(currentUserId, requestedId);
     }
     
 }

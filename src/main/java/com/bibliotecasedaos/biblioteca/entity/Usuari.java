@@ -44,7 +44,7 @@ public class Usuari implements UserDetails{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(unique = true, nullable = false)
     @NotBlank(message = "Per favor afegeix un nick")
     @Size(max = 10, message = "El Nick ha de tenir un màxim de 10 caràcters")

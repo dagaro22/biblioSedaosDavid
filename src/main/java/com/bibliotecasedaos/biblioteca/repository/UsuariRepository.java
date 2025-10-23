@@ -54,4 +54,7 @@ public interface UsuariRepository extends JpaRepository<Usuari, Long>{
      */
     @Query("SELECT u FROM Usuari u Where u.nif = :nif")
     Optional<Usuari> findUsuariByNifWithJPQL(@Param ("nif") String nif);
+    
+    //añadido de prueba para los permisos por id
+    public Usuari findByNick(String authenticatedNick);
 }
