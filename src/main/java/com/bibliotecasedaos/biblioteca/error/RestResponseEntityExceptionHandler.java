@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,41 +21,63 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- *
- * @author dg
+ * Gestor centralitzat d'excepcions per a tots els controladors REST de l'aplicació.
+ * 
+ * @author David García Rodríguez
  */
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
     
-    //Maneja UsuariNotFoundException (404 Not Found)
+    /**
+     * Maneja les excepcions llançades quan un {@code Usuari} no es pot trobar.
+     * @param exception L'excepció {@link UsuariNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(UsuariNotFoundException.class)
     public ResponseEntity<ErrorMessage> usuariNotFoundException(UsuariNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
-    //Maneja AutorNotFoundException (404 Not Found)
+    /**
+     * Maneja les excepcions llançades quan un {@code Autor} no es pot trobar.
+     * @param exception L'excepció {@link AutorNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(AutorNotFoundException.class)
     public ResponseEntity<ErrorMessage> autorNotFoundException(AutorNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
-    //Maneja AutorNotFoundException (404 Not Found)
+    /**
+     * Maneja les excepcions llançades quan un {@code Llibre} no es pot trobar.
+     * @param exception L'excepció {@link LlibreNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(LlibreNotFoundException.class)
     public ResponseEntity<ErrorMessage> llibreNotFoundException(LlibreNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
-    //Maneja ExemplarNotFoundException (404 Not Found)
+    /**
+     * Maneja les excepcions llançades quan un {@code Exemplar} no es pot trobar.
+     * @param exception L'excepció {@link ExemplarNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(ExemplarNotFoundException.class)
     public ResponseEntity<ErrorMessage> exemplarNotFoundException(ExemplarNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
-    //Maneja els errors de validació de camp (@Valid)
+    /**
+     * Sobreescriu el mètode per manejar errors de validació d'arguments (per exemple, amb {@code @Valid}
+     * en el controlador).
+     * <p>Recull tots els errors de camp i els retorna en un mapa amb el codi {@code 400 Bad Request}.</p>
+     * * {@inheritDoc}
+     */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String,Object> errors = new HashMap<>();
@@ -65,14 +88,23 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
     
-    //Maneja errors de negoci (Nick duplicat)
+    /**
+     * Maneja l'excepció de negoci llançada quan un camp únic (com el Nick) ja existeix.
+     * @param ex L'excepció {@link NickAlreadyExistsException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 409 Conflict} i el missatge d'error.
+     */
     @ExceptionHandler(NickAlreadyExistsException.class)
     public ResponseEntity<ErrorMessage> handleNickAlreadyExistsException(NickAlreadyExistsException ex) {
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, ex.getMessage());
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
     
-    //Maneja fallades de validació de JPA/Hibernate (Ex: @Size, @NotNull) a la capa de persistència (400 Bad Request)
+    /**
+     * Maneja les fallades de validació de JPA/Hibernate (Ex: {@code @Size}, {@code @NotNull})
+     * que ocorren a la capa de persistència o directament.
+     * @param ex L'excepció {@code ConstraintViolationException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 400 Bad Request} que conté un mapa d'errors.
+     */
     @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
     public ResponseEntity<Map<String, String>> handleConstraintViolationException(
         jakarta.validation.ConstraintViolationException ex) {
@@ -88,7 +120,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
     
-    // Maneja errors d'integritat de la BBDD (Clau duplicada, etc.) (409 Conflict)
+    /**
+     * Maneja els errors d'integritat de la base de dades (com violacions de clau única,
+     * clau forana o restriccions NOT NULL a la capa de persistència).
+     * <p>Retorna un missatge genèric de conflicte amb el codi {@code 409 Conflict}.</p>
+     * * @param ex L'excepció {@link DataIntegrityViolationException} llançada per Spring/JPA.
+     * @return Una resposta HTTP amb el codi {@code 409 Conflict} i el cos de l'error.
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorMessage> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         
@@ -104,4 +142,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
     
+    /**
+     * Maneja les excepcions d'autorització denegada llançades per Spring Security.
+     * <p>Aquest mètode s'activa quan una sol·licitud és rebutjada per una regla
+     * {@code @PreAuthorize} o un altre mecanisme d'autorització, i retorna un
+     * codi d'estat HTTP {@code 403 Forbidden}.</p>
+     * @param ex L'excepció {@link AuthorizationDeniedException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 403 Forbidden} i el cos de l'error.
+     */
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorMessage> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        String detailedMessage = "Accés Denegat: No tens els permisos necessaris per realitzar aquesta acció.";
+        ErrorMessage message = new ErrorMessage(HttpStatus.FORBIDDEN, detailedMessage);
+        return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
+    }
 }

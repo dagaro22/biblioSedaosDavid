@@ -10,8 +10,8 @@ import com.bibliotecasedaos.biblioteca.error.ExemplarNotFoundException;
 import java.util.List;
 
 /**
- *
- * @author dg
+ * Interfície de servei per a la gestió dels exemplars de llibres.
+ * @author David García Rodríguez
  */
 public interface ExemplarService {
     

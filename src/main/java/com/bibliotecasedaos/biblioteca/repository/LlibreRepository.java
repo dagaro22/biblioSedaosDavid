@@ -10,11 +10,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- *
- * @author dg
+ * Repositori de dades per a l'entitat Llibre, que proporcionar mètodes de gestió de dades (CRUD).
+ * 
+ * @author David García Rodríguez
  */
 @Repository
 public interface LlibreRepository extends JpaRepository<Llibre,Long>{
     
+    /**
+     * Recupera una llista de tots els llibres presents a la base de dades.
+     * @return Una llista d'objectes {@code Llibre} ordenats per títol ascendent.
+     */
     List<Llibre> findAllByOrderByTitolAsc();
 }

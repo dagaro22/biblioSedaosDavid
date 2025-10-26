@@ -5,8 +5,10 @@
 package com.bibliotecasedaos.biblioteca.error;
 
 /**
- *
- * @author dg
+ * Excepció personalitzada llançada quan una operació de cerca
+ * no troba l'entitat {@code Exemplar} esperada a la base de dade
+ * 
+ * @author David García Rodríguez
  */
 public class ExemplarNotFoundException extends Exception {
     public ExemplarNotFoundException (String message) {

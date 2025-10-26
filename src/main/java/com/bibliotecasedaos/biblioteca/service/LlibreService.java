@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
- * @author dg
+ * Interfície de servei per a la gestió dels llibres a l'aplicació, defineix les operacions bàsiques per a la cerca i el manteniment.
+ * 
+ * @author David García Rodríguez
  */
 public interface LlibreService {
     

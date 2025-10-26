@@ -22,8 +22,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
- * @author dg
+ * Entitat que representa un Llibre a la base de dades.
+ * 
+ * @author David García Rodríguez
  */
 @Entity
 @Table(name = "llibres")

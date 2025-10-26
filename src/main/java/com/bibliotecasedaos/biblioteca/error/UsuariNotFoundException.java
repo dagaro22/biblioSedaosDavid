@@ -5,11 +5,17 @@
 package com.bibliotecasedaos.biblioteca.error;
 
 /**
- *
- * @author dg
+ * Excepció personalitzada llançada quan una operació de cerca
+ * no troba l'entitat {@code Usuari} esperada a la base de dade
+ * 
+ * @author David García Rodríguez
  */
 public class UsuariNotFoundException extends Exception{
 
+    /**
+     * Constructor que crea una nova excepció amb un missatge concret.
+     * @param message 
+     */
     public UsuariNotFoundException(String message) {
         super(message);
     }

@@ -12,14 +12,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
- * @author dg
+ * Entitat que representa un Autor a la base de dades.
+ * 
+ * @author David García Rodríguez
  */
 @Entity
 @Data
@@ -35,6 +37,6 @@ public class Autor {
     private Long id;
     
     @Column(name = "nom", nullable = false)
-    private String nom;
-    
+    @NotBlank(message = "El nom de l'autor no pot ser buit.")
+    private String nom;   
 }

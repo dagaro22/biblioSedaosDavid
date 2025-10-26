@@ -94,12 +94,12 @@ public class UsuariController {
     }
     
     /**
-     * Endpoint per a actualitzar les dades d'un usuari existent.
-     * El cos de la petició (RequestBody) conté les noves dades.
+     * Endpoint per a actualitzar les dades d'un usuari existent.El cos de la petició (RequestBody) conté les noves dades.
      *
      * @param id L'identificador (ID) de l'usuari a actualitzar.
      * @param usuari L'objecte {@link Usuari} amb les dades a aplicar.
      * @return L'objecte {@link Usuari} actualitzat.
+     * @throws com.bibliotecasedaos.biblioteca.error.UsuariNotFoundException
      */
     @PutMapping("/actualitzarUsuari/{id}")
     public Usuari updateUsuari(@PathVariable Long id,@RequestBody Usuari usuari) throws UsuariNotFoundException{

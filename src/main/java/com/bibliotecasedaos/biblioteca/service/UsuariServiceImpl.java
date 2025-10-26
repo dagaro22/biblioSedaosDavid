@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  * Aquesta classe actua com a pont entre el controlador i la capa de persistència
  * (Repositori), contenint la lògica per a la validació, cerca i modificació de dades d'usuaris.
  * 
- * @author dg
+ * @author David García Rodríguez
  */
 @Service
 public class UsuariServiceImpl implements UsuariService {
@@ -166,31 +166,35 @@ public class UsuariServiceImpl implements UsuariService {
         return usuariRepository.findUsuariByNifWithJPQL(nif);
     }
     
+    /**
+     * Comprova si l'usuari actualment autenticat és el propietari del recurs sol·licitat.
+     * @param requestedId L'identificador (ID) del recurs o entitat que s'està intentant accedir.
+     * @param principal L'objecte principal de l'autenticació de Spring Security, que pot ser un {@code String}
+     * (el nom d'usuari) o un objecte {@code Usuari} (l'entitat completa).
+     * @return {@code true} si l'usuari autenticat és l'administrador o si l'ID de l'usuari
+     * autenticat coincideix amb el {@code requestedId}; {@code false} en cas contrari (incloent-hi
+     * usuaris anònims o no trobats).
+     */
     public boolean isResourceOwner(Long requestedId, Object principal) {
     
         String authenticatedNick = null;
 
-        //Extreure el nom d'usuari (nick) de l'objecte principal de manera segura
         if (principal instanceof String) {
             authenticatedNick = (String) principal;
         } else if (principal instanceof Usuari) { 
             authenticatedNick = ((Usuari) principal).getNick();
         }
     
-        // Si no s'ha pogut extreure el nick (o és anònim/buit), denega.
         if (authenticatedNick == null || authenticatedNick.isBlank() || "ANONYMOUS".equals(authenticatedNick)) {
             return false;
         }
-    
-        //Cerca l'usuari autenticat pel nick a la base de dades
 
         Optional<Usuari> usuariOptional = usuariRepository.findUsuariByNickWithJPQL(authenticatedNick);
     
         if (usuariOptional.isEmpty()) {
             return false;
         }
-    
-        //Compara els IDs
+
         Long currentUserId = usuariOptional.get().getId();
     
         return Objects.equals(currentUserId, requestedId);

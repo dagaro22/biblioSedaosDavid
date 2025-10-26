@@ -10,15 +10,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
+ * Repositori de dades per a l'entitat Autor, que proporcionar mètodes de gestió de dades (Crud).
  *
- * @author dg
+ * @author David García Rodríguez
  */
 @Repository
 public interface AutorRepository extends JpaRepository<Autor, Long>{
     
     /**
      * Recupera una llista de tots els autors, ordenats alfabèticament pel seu nom (nom).
-     *
      * @return Llista de totes les entitats {@code Autor} ordenades pel camp 'nom' de forma ascendent.
      */
     List<Autor> findAllByOrderByNomAsc();

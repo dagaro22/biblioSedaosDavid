@@ -20,7 +20,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * Entitat que representa un Exemplar d'un llibre a la base de dades.
+ * 
  * @author dg
  */
 @Entity
