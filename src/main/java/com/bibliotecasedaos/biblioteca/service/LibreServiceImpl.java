@@ -4,8 +4,10 @@
  */
 package com.bibliotecasedaos.biblioteca.service;
 
+import com.bibliotecasedaos.biblioteca.entity.Autor;
 import com.bibliotecasedaos.biblioteca.entity.Llibre;
 import com.bibliotecasedaos.biblioteca.error.LlibreNotFoundException;
+import com.bibliotecasedaos.biblioteca.repository.AutorRepository;
 import com.bibliotecasedaos.biblioteca.repository.LlibreRepository;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +24,10 @@ public class LibreServiceImpl implements LlibreService{
    
     @Autowired
     LlibreRepository llibreRepository;
-    
+
+    @Autowired
+    AutorRepository autorRepository;
+
     /**
      * Recupera una llista de tots els llibres presents a la base de dades, ordenats pel títol.
      * @return Una llista d'objectes {@code Llibre}. Retorna una llista buida si no hi ha llibres registrats.
@@ -52,6 +57,25 @@ public class LibreServiceImpl implements LlibreService{
     @Override
     public Llibre updateLlibre(Long id, Llibre llibre) throws LlibreNotFoundException {
 
+
+        Llibre llibreDb = llibreRepository.findById(id)
+                .orElseThrow(() -> new LlibreNotFoundException("Llibre amb ID " + id + " no trobat"));
+
+        llibreDb.setIsbn(llibre.getIsbn());
+        llibreDb.setTitol(llibre.getTitol());
+        llibreDb.setPagines(llibre.getPagines());
+        llibreDb.setEditorial(llibre.getEditorial());
+
+        if (llibre.getAutor() != null && llibre.getAutor().getId() != null) {
+            Autor autor = autorRepository.findById(llibre.getAutor().getId())
+                    .orElse(null);
+            llibreDb.setAutor(autor);
+        } else {
+            llibreDb.setAutor(null);
+        }
+
+        return llibreRepository.save(llibreDb);
+        /*
         Llibre llibreDb = llibreRepository.findById(id)
              .orElseThrow(() -> new LlibreNotFoundException("Llibre amb ID " + id + " no trobat."));
         
@@ -60,6 +84,7 @@ public class LibreServiceImpl implements LlibreService{
         }
         
         return llibreRepository.save(llibreDb);
+        */
     }
    
     /**

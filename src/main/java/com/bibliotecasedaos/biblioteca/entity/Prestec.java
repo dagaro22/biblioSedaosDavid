@@ -20,8 +20,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
- * @author dg
+ * Entitat que representa un Prestec a la base de dades.
+ * 
+ * @author David García Rodríguez
  */
 @Entity
 @Table(name = "prestecs")

@@ -72,6 +72,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    @ExceptionHandler(ExemplarReservatException.class)
+    public ResponseEntity<ErrorMessage> exemplarReservatException(ExemplarReservatException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+    
+    @ExceptionHandler(PrestecNotFoundException.class)
+    public ResponseEntity<ErrorMessage> prestecNotFoundException(PrestecNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
     /**
      * Sobreescriu el mètode per manejar errors de validació d'arguments (per exemple, amb {@code @Valid}
      * en el controlador).

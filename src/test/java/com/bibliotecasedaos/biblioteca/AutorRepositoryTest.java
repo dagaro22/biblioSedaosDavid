@@ -25,7 +25,7 @@ public class AutorRepositoryTest {
     @Test
     public void saveAutor() {
         Autor autor = new Autor();
-        autor.setNom("Maximo Huerta2");
+        autor.setNom("Maximo Huerta5");
         
         autorRepository.save(autor);
     }
