@@ -175,6 +175,7 @@ public class UsuariServiceImpl implements UsuariService {
      * autenticat coincideix amb el {@code requestedId}; {@code false} en cas contrari (incloent-hi
      * usuaris anònims o no trobats).
      */
+    @Override
     public boolean isResourceOwner(Long requestedId, Object principal) {
     
         String authenticatedNick = null;

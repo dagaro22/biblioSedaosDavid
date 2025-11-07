@@ -75,7 +75,9 @@ public class PrestecController {
      * @return El préstec creat amb l'ID.
      */
     
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN') or #usuariId == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or #prestec.getUsuari().getId() == authentication.principal.id")
     @PostMapping("/afegirPrestec")
     public ResponseEntity<Prestec> savePrestec(@Valid @RequestBody Prestec prestec) throws ExemplarReservatException, ExemplarNotFoundException {
         Prestec nouPrestec = prestecService.savePrestec(prestec);

@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- *
- * @author dg
+ * Proves unitaries per a la interfície {@link AutorRepository}. 
+ * 
+ * @author David García Rodríguez
  */
 @SpringBootTest
 public class AutorRepositoryTest {
@@ -22,24 +23,32 @@ public class AutorRepositoryTest {
     @Autowired 
     AutorRepository autorRepository;
     
+    /**
+     * Prova la funcionalitat de guardar una nova entitat {@link Autor} a la base de dades.
+     */
     @Test
     public void saveAutor() {
         Autor autor = new Autor();
-        autor.setNom("Maximo Huerta5");
+        autor.setNom("Maximo Huerta10");
         
         autorRepository.save(autor);
     }
     
+    /**
+     * Prova la funcionalitat de buscar una entitat {@link Autor} pel seu ID.
+     */
     @Test 
     public void findAutorById() {
         Long id = 4L;
         Optional<Autor> autor = autorRepository.findById(id);
         
-        System.out.println("Autor: " + autor);
-        
+        System.out.println("Autor: " + autor);       
         
     }
     
+    /**
+     * Prova la funcionalitat de recuperar tots els autors de la base de dades.
+     */
     @Test 
     public void findAllAutors() {
         Long id = 4L;

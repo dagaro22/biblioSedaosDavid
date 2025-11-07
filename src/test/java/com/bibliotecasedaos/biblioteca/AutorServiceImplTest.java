@@ -23,6 +23,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Proves unitàries per a la implementació del servei {@link AutorServiceImpl}.
+ * 
+ * @Author David García Rodríguez
+ */
 @ExtendWith(MockitoExtension.class)
 public class AutorServiceImplTest {
 
@@ -42,6 +47,11 @@ public class AutorServiceImplTest {
     }
 
 
+    /**
+     * Prova la funcionalitat de llistar tots els autors.
+     * Verifica que el servei crida al mètode d'ordenació del repositori
+     * i retorna la llista d'autors esperada.
+     */
     @Test
     void findAllAutors_shouldReturnListOfAutorsOrderedByName() {
 
@@ -57,7 +67,11 @@ public class AutorServiceImplTest {
         verify(autorRepository, times(1)).findAllByOrderByNomAsc();
     }
     
-    
+    /**
+     * Prova la funcionalitat de cercar un autor per ID existent.
+     * 
+     * @throws AutorNotFoundException Si l'autor no es troba (en aquest cas, no hauria de llançar-se).
+     */
     @Test
     void findAutorById_shouldReturnAutor() throws AutorNotFoundException {
 
@@ -71,6 +85,11 @@ public class AutorServiceImplTest {
         verify(autorRepository, times(1)).findById(1L);
     }
     
+    /**
+     * Prova la funcionalitat de guardar un nou autor.
+     * Verifica que el servei crida al mètode {@code save} del repositori
+     * i retorna l'objecte guardat.
+     */
     @Test
     void saveAutor_shouldReturnSavedAutor() {
 
@@ -83,6 +102,13 @@ public class AutorServiceImplTest {
         verify(autorRepository, times(1)).save(autor1);
     }
     
+    /**
+     * Prova la funcionalitat d'eliminació reeixida.
+     * Verifica que el servei comprova l'existència de l'autor i,
+     * si existeix, crida al mètode {@code deleteById} del repositori.
+     *
+     * @throws AutorNotFoundException Si l'autor no es troba (en aquest cas, no hauria de llançar-se).
+     */
     @Test
     void deleteAutor_shouldDeleteAutor_whenIdExists() throws AutorNotFoundException {
 
@@ -92,12 +118,17 @@ public class AutorServiceImplTest {
 
         doNothing().when(autorRepository).deleteById(existingId);
 
-        assertDoesNotThrow(() -> autorService.deleteAutor(existingId)); // Assegurem que no llança excepció
+        assertDoesNotThrow(() -> autorService.deleteAutor(existingId));
 
         verify(autorRepository, times(1)).findById(existingId);
         verify(autorRepository, times(1)).deleteById(existingId);
     }
 
+    /**
+     * Prova el maneig d'excepció en intentar eliminar un autor que no existeix.
+     * Verifica que el servei llança {@link AutorNotFoundException}
+     * i que el mètode {@code deleteById} del repositori MAI és cridat.
+     */
     @Test
     void deleteAutor_shouldThrowException_whenIdDoesNotExist() {
 

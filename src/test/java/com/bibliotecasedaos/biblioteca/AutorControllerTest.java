@@ -32,8 +32,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- *
- * @author dg
+ * Proves unitàries per a {@link AutorController} centrades en la capa de controlador.
+ * 
+ * @author David García Rodríguez
  */
 @WebMvcTest(AutorController.class)
 @Import(SecurityConfig.class)
@@ -74,7 +75,13 @@ public class AutorControllerTest {
         }
     }
 
-
+    /**
+     * Prova la funcionalitat de llistar tots els autors.
+     * Verifica que el servei retorna una llista i el controlador respon
+     * amb un estat 200 OK i el cos JSON esperat.
+     *
+     * @throws Exception Si {@link MockMvc} llança una excepció.
+     */
     @Test
     @WithMockUser
     void findAllAutors_shouldReturnListOfAutors() throws Exception {
@@ -90,6 +97,11 @@ public class AutorControllerTest {
         verify(autorService, times(1)).findAllAutors();
     }
     
+    /**
+     * Prova la funcionalitat de guardar un autor quan l'usuari té l'autoritat ADMIN.
+     * Verifica que el servei és cridat, es retorna l'estat 200 OK i l'autor guardat.
+     * @throws Exception Si {@link MockMvc} llança una excepció.
+     */
     @Test
     @WithMockUser(authorities = "ADMIN")
     void saveAutor_shouldSaveAndReturnAutor_whenUserIsAdmin() throws Exception {
@@ -108,6 +120,11 @@ public class AutorControllerTest {
         verify(autorService, times(1)).saveAutor(any(Autor.class));
     }
     
+    /**
+     * Prova la restricció de seguretat en intentar guardar un autor sense ser ADMIN.
+     * Verifica que la petició retorna un estat 403 Forbidden i el servei NO és cridat.
+     * @throws Exception Si {@link MockMvc} llança una excepció.
+     */
     @Test
     @WithMockUser(roles = "USER")
     void saveAutor_shouldReturn403_whenUserIsNotAdmin() throws Exception {
@@ -121,6 +138,11 @@ public class AutorControllerTest {
         verify(autorService, never()).saveAutor(any(Autor.class));
     }
     
+    /**
+     * Prova la funcionalitat d'eliminar un autor per ID quan l'usuari és ADMIN.
+     * Verifica que el servei és cridat i es retorna l'estat 200 OK.
+     * @throws Exception Si {@link MockMvc} llança una excepció.
+     */
     @Test
     @WithMockUser(authorities = "ADMIN")
     void deleteAutor_shouldDeleteAndReturnOk_whenIdExistsAndUserIsAdmin() throws Exception {
@@ -135,6 +157,11 @@ public class AutorControllerTest {
         verify(autorService, times(1)).deleteAutor(existingId);
     }
 
+    /**
+     * Prova el maneig de l'excepció quan s'intenta eliminar un autor que no existeix.
+     * Verifica que es retorna l'estat 404 Not Found.
+     * @throws Exception Si {@link MockMvc} llança una excepció.
+     */
     @Test
     @WithMockUser(authorities = "ADMIN")
     void deleteAutor_shouldReturn404_whenIdDoesNotExist() throws Exception {

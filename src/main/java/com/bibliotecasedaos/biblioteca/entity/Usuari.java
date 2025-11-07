@@ -4,6 +4,7 @@
  */
 package com.bibliotecasedaos.biblioteca.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -93,6 +94,7 @@ public class Usuari implements UserDetails{
      * @return Col·lecció d'autoritats concedides (rols).
      */
     @Override
+    @JsonIgnore//Lo he añadido para poder pasar los test dePrestecController
     public Collection<? extends GrantedAuthority> getAuthorities() {
         
         String roleName = "USER";

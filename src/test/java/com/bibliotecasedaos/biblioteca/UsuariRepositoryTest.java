@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
 /**
  * Test per verificar el trovar usuari per nick. Prova la capa de repositori del usuari.
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author David García Rodríguez
  */
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 public class UsuariRepositoryTest {
 
     @Autowired
@@ -43,7 +45,7 @@ public class UsuariRepositoryTest {
                 .cognom2("Cognom2")
                 .email("carlos@gmail.com")
                 .password("qwerty") 
-                .tlf("66666666")
+                .tlf("666666667")
                 .carrer("C/carrer")
                 .provincia("Bcn")
                 .localitat("localitat")

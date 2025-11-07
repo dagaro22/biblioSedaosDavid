@@ -26,4 +26,6 @@ public interface UsuariService {
     Optional<Usuari> findUsuariByNifWithJPQL(String nif);
     Optional<Usuari> findByNif(String nif);
     Usuari findUsuariById(Long id) throws UsuariNotFoundException;
+    //añadido
+    boolean isResourceOwner(Long requestedId, Object principal);
 }
