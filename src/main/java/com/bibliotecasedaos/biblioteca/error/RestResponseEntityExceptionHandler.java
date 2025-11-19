@@ -84,6 +84,24 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    @ExceptionHandler(HorariNotFoundException.class)
+    public ResponseEntity<ErrorMessage> horariNotFoundException(HorariNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(HorariReservatException.class)
+    public ResponseEntity<ErrorMessage> horariReservatException(HorariReservatException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(GrupNotFoundException.class)
+    public ResponseEntity<ErrorMessage> grupNotFoundException(GrupNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+    
     /**
      * Sobreescriu el mètode per manejar errors de validació d'arguments (per exemple, amb {@code @Valid}
      * en el controlador).

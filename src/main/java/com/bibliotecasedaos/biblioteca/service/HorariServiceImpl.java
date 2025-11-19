@@ -27,5 +27,10 @@ public class HorariServiceImpl implements HorariService{
         return horariRepository.findAll();
         
     }
+
+    @Override
+    public Horari saveHorari(Horari horari) {
+        return horariRepository.save(horari);
+    }
     
 }

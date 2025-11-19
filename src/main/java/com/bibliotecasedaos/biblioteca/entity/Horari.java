@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,9 @@ import lombok.NoArgsConstructor;
  * @author David García Rodríguez
  */
 @Entity
-@Table(name = "horaris")
+@Table(name = "horaris", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"sala", "dia", "hora"}, name = "UK_HORARI_SALA_DIA_HORA") 
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
