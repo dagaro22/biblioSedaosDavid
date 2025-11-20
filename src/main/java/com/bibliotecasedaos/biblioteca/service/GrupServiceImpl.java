@@ -6,13 +6,19 @@ package com.bibliotecasedaos.biblioteca.service;
 
 import com.bibliotecasedaos.biblioteca.entity.Grup;
 import com.bibliotecasedaos.biblioteca.entity.Horari;
+import com.bibliotecasedaos.biblioteca.entity.Usuari;
 import com.bibliotecasedaos.biblioteca.error.GrupNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariReservatException;
+import com.bibliotecasedaos.biblioteca.error.LimitDeMembresSuperatException;
+import com.bibliotecasedaos.biblioteca.error.MembreJaExisteixException;
+import com.bibliotecasedaos.biblioteca.error.UsuariNotFoundException;
 import com.bibliotecasedaos.biblioteca.repository.GrupRepository;
 import com.bibliotecasedaos.biblioteca.repository.HorariRepository;
+import com.bibliotecasedaos.biblioteca.repository.UsuariRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +34,11 @@ public class GrupServiceImpl implements GrupService {
     
     @Autowired 
     HorariRepository horariRepository;
+    
+    @Autowired
+    private UsuariRepository usuariRepository;
+    
+    private static final int MAXIM_MEMBRES = 5;
     
     @Override
     @Transactional
@@ -61,6 +72,31 @@ public class GrupServiceImpl implements GrupService {
     @Override
     public List<Grup> findAllGrups() {
         return grupRepository.findAll();
+    }
+
+    @Override
+    public Grup afegirUsuariGrup(Long grupId, Long membreId) throws GrupNotFoundException, UsuariNotFoundException, LimitDeMembresSuperatException, MembreJaExisteixException {
+        
+        Grup grup = grupRepository.findById(grupId)
+                .orElseThrow(()-> new GrupNotFoundException("Grup amb ID " + grupId + " no trobat."));
+        
+        Usuari nouMembre = usuariRepository.findById(membreId)
+                .orElseThrow(() -> new UsuariNotFoundException("Usuari amb ID " + membreId + " no trobat."));
+        
+        if (grup.getMembres().size() >= MAXIM_MEMBRES) {
+            throw new LimitDeMembresSuperatException("El grup " + grup.getNom() + " ja té " + MAXIM_MEMBRES + " membres.");
+        }
+        
+        Optional<Usuari> membreExistent = grup.getMembres().stream()
+                .filter(u -> u.getId().equals(membreId))
+                .findFirst();
+        
+        if (membreExistent.isPresent()) {
+            throw new MembreJaExisteixException("L'usuari ja és membre del grup");
+        }
+        
+        grup.getMembres().add(nouMembre);    
+        return grupRepository.save(grup);
     }
     
 }

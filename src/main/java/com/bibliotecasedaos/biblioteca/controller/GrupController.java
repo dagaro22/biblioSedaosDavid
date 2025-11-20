@@ -8,6 +8,9 @@ import com.bibliotecasedaos.biblioteca.entity.Grup;
 import com.bibliotecasedaos.biblioteca.error.GrupNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariReservatException;
+import com.bibliotecasedaos.biblioteca.error.LimitDeMembresSuperatException;
+import com.bibliotecasedaos.biblioteca.error.MembreJaExisteixException;
+import com.bibliotecasedaos.biblioteca.error.UsuariNotFoundException;
 import com.bibliotecasedaos.biblioteca.service.GrupService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,10 +54,20 @@ public class GrupController {
         return new ResponseEntity<>(nouGrup, HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasAuthority('ADMIN') or #grup.getAdministrador().getId() == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or @grupSecurity.esAdminDelGrup(#id, authentication.principal.id)")
     @DeleteMapping("/eliminarGrup/{id}")
     public String deleteGrup(@PathVariable Long id) throws GrupNotFoundException {
         grupService.deleteGrup(id);
         return "Grup esborrat";
+    }
+    
+    @PreAuthorize("#membreId == authentication.principal.id")
+    @PutMapping("/{grupId}/afegirUsuariGrup/{membreId}")
+    public ResponseEntity<Grup> afegirMembre(@PathVariable Long grupId, @PathVariable Long membreId) 
+            throws GrupNotFoundException, UsuariNotFoundException, LimitDeMembresSuperatException, MembreJaExisteixException {
+        
+        Grup grupActualitzat = grupService.afegirUsuariGrup(grupId, membreId);
+        
+        return ResponseEntity.ok(grupActualitzat);
     }
 }

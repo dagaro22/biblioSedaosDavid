@@ -102,6 +102,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    @ExceptionHandler(MembreJaExisteixException.class)
+    public ResponseEntity<ErrorMessage> membreJaExisteixException(MembreJaExisteixException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+    
+    @ExceptionHandler(LimitDeMembresSuperatException.class)
+    public ResponseEntity<ErrorMessage> limitDeMembresSuperatException(LimitDeMembresSuperatException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+    
     /**
      * Sobreescriu el mètode per manejar errors de validació d'arguments (per exemple, amb {@code @Valid}
      * en el controlador).
