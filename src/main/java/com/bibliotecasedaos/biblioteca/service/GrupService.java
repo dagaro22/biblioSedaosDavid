@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.service;
 
 import com.bibliotecasedaos.biblioteca.entity.Grup;
+import com.bibliotecasedaos.biblioteca.entity.Usuari;
 import com.bibliotecasedaos.biblioteca.error.GrupNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariReservatException;
@@ -24,4 +25,6 @@ public interface GrupService {
     List<Grup> findAllGrups();
     
     Grup afegirUsuariGrup(Long grupId, Long membreId) throws GrupNotFoundException, UsuariNotFoundException, LimitDeMembresSuperatException, MembreJaExisteixException;
+    List<Usuari> trobarMemebresGrup(Long grupId) throws GrupNotFoundException;
+    void eliminarUsuariDeGrup(Long grupId, Long membreId) throws GrupNotFoundException, UsuariNotFoundException;
 }

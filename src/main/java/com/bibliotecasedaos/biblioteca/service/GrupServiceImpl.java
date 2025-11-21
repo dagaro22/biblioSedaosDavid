@@ -98,5 +98,27 @@ public class GrupServiceImpl implements GrupService {
         grup.getMembres().add(nouMembre);    
         return grupRepository.save(grup);
     }
+
+    @Override
+    public List<Usuari> trobarMemebresGrup(Long grupId) throws GrupNotFoundException {
+        Grup grup = grupRepository.findById(grupId)
+                .orElseThrow(() -> new GrupNotFoundException("Grup amb ID " + grupId + " no trobat."));
+        
+        return grup.getMembres();
+    }
+    
+    @Override
+    @Transactional
+    public void eliminarUsuariDeGrup(Long grupId, Long membreId) throws GrupNotFoundException, UsuariNotFoundException{
+        Grup grup = grupRepository.findById(grupId)
+                .orElseThrow(()-> new GrupNotFoundException("Grup amb ID " + grupId + " no trobat."));
+        
+        boolean membreEliminat = grup.getMembres().removeIf(usuari -> usuari.getId().equals(membreId));
+        if (!membreEliminat) {
+            throw new UsuariNotFoundException("L'usuari amb id " + membreId + " no s'ha trobat al grup amb id " + grupId);
+        }
+        
+        grupRepository.save(grup);
+    }
     
 }

@@ -5,6 +5,7 @@
 package com.bibliotecasedaos.biblioteca.controller;
 
 import com.bibliotecasedaos.biblioteca.entity.Grup;
+import com.bibliotecasedaos.biblioteca.entity.Usuari;
 import com.bibliotecasedaos.biblioteca.error.GrupNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariNotFoundException;
 import com.bibliotecasedaos.biblioteca.error.HorariReservatException;
@@ -69,5 +70,19 @@ public class GrupController {
         Grup grupActualitzat = grupService.afegirUsuariGrup(grupId, membreId);
         
         return ResponseEntity.ok(grupActualitzat);
+    }
+    
+    @GetMapping("/llistarUsuarisGrup/{grupId}")
+    public ResponseEntity<List<Usuari>> llistarMembres(@PathVariable Long grupId) throws GrupNotFoundException {
+        
+        List<Usuari> membres = grupService.trobarMemebresGrup(grupId);  
+        return ResponseEntity.ok(membres);
+    }
+    
+    @PreAuthorize("hasAuthority('ADMIN') or #membreId == authentication.principal.id")
+    @DeleteMapping("/{grupId}/sortirUsuari/{membreId}")
+    public String eliminarUsuariDeGrup(@PathVariable Long grupId, @PathVariable Long membreId) throws GrupNotFoundException, UsuariNotFoundException {
+        grupService.eliminarUsuariDeGrup(grupId, membreId);
+        return "Usuari amb id " + membreId + " esborrat del grup amb id " +grupId;
     }
 }
