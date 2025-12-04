@@ -18,7 +18,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * Entitat que representa un Horari a la base de dades.
+ * 
  * @author David García Rodríguez
  */
 @Entity

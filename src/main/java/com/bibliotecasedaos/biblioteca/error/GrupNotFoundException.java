@@ -5,7 +5,9 @@
 package com.bibliotecasedaos.biblioteca.error;
 
 /**
- *
+ * Excepció personalitzada llançada quan una operació de cerca
+ * no troba l'entitat {@code Grup} esperada a la base de dade
+ * 
  * @author David García Rodríguez
  */
 public class GrupNotFoundException extends Exception {

@@ -15,7 +15,9 @@ import com.bibliotecasedaos.biblioteca.error.UsuariNotFoundException;
 import java.util.List;
 
 /**
- *
+ * Interfície de servei per a la gestió de grups a l'aplicació.
+ * Defineix les operacions bàsiques de CRUD
+ * 
  * @author David García Rodríguez
  */
 public interface GrupService {

@@ -5,8 +5,11 @@
 package com.bibliotecasedaos.biblioteca.error;
 
 /**
- *
- * @author dg
+ * 
+ * Excepció personalitzada llançada quan una operació de cerca
+ * no troba l'entitat {@code Horari} esperada a la base de dade
+ * 
+ * @author David García Rodríguez
  */
 public class HorariNotFoundException extends Exception{
     public HorariNotFoundException(String message) {

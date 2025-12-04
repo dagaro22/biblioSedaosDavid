@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- *
+ * Repositori de dades per a l'entitat Grup, extén JpaRepository per proporcionar mètodes CRUD.
+ * 
  * @author David García Rodríguez
  */
 @Repository

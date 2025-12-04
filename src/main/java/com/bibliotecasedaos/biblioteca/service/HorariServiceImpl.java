@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ * Classe que proporciona la lògica de negoci per a la gestió dels horaris, implementant les operacions de cerca i manteniment de dades.
+ * 
  * @author David García Rodríguez
  */
 @Service
@@ -21,6 +22,10 @@ public class HorariServiceImpl implements HorariService{
     @Autowired
     HorariRepository horariRepository;
     
+    /**
+     * Troba tots els horaris del repositori.
+     * @return Una llista de tots els objectes Horari, pot estar buida.
+     */
     @Override
     public List<Horari> findAllHoraris() {
         
@@ -28,6 +33,11 @@ public class HorariServiceImpl implements HorariService{
         
     }
 
+    /**
+     * Guarda un nou horari a la base de dades
+     * @param horari L'objecte Horari a desar.
+     * @return L'objecte Horari que ha estat desat i persisteix a la base de dades.
+     */
     @Override
     public Horari saveHorari(Horari horari) {
         return horariRepository.save(horari);

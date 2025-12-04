@@ -72,42 +72,79 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    /**
+     * Maneja les excepcions llançades quan es produeix un intent de realitzar una operació
+     * sobre un {@code Exemplar} que ja està en estat reservat o prestat.
+     * @param exception L'excepció {@link ExemplarReservatException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 409 Conflict} i el cos de l'error.
+     */
     @ExceptionHandler(ExemplarReservatException.class)
     public ResponseEntity<ErrorMessage> exemplarReservatException(ExemplarReservatException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
     
+    /**
+     * Maneja les excepcions llançades quan un {@code Prestec} no es pot trobar.
+     * @param exception L'excepció {@link PrestecNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(PrestecNotFoundException.class)
     public ResponseEntity<ErrorMessage> prestecNotFoundException(PrestecNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    /**
+     * Maneja les excepcions llançades quan un {@code Horari} no es pot trobar.
+     * @param exception L'excepció {@link HorariNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(HorariNotFoundException.class)
     public ResponseEntity<ErrorMessage> horariNotFoundException(HorariNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    /**
+     * Maneja les excepcions llançades quan es produeix un intent de reserva
+     * d'un {@code Horari} que ja està ocupat per un altre grup.
+     * @param exception L'excepció {@link HorariReservatException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 409 Conflict} i el cos de l'error.
+     */
     @ExceptionHandler(HorariReservatException.class)
     public ResponseEntity<ErrorMessage> horariReservatException(HorariReservatException exception) {
-        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
     
+    /**
+     * Maneja les excepcions llançades quan un {@code Grup} no es pot trobar.
+     * @param exception L'excepció {@link GrupNotFoundException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 404 Not Found} i el cos de l'error.
+     */
     @ExceptionHandler(GrupNotFoundException.class)
     public ResponseEntity<ErrorMessage> grupNotFoundException(GrupNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
     
+    /**
+     * Maneja l'excepció llançada quan s'intenta afegir un usuari a un grup del qual ja és membre.
+     * @param exception L'excepció {@link MembreJaExisteixException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 409 Conflict} i el cos de l'error.
+     */
     @ExceptionHandler(MembreJaExisteixException.class)
     public ResponseEntity<ErrorMessage> membreJaExisteixException(MembreJaExisteixException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
     
+    /**
+     * Maneja l'excepció llançada quan s'intenta afegir un membre a un grup amb limit de membres.
+     * @param exception L'excepció {@link LimitDeMembresSuperatException} llançada.
+     * @return Una resposta HTTP amb el codi {@code 409 Conflict} i el cos de l'error.
+     */
     @ExceptionHandler(LimitDeMembresSuperatException.class)
     public ResponseEntity<ErrorMessage> limitDeMembresSuperatException(LimitDeMembresSuperatException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());

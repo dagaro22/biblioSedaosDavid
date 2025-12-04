@@ -5,8 +5,9 @@
 package com.bibliotecasedaos.biblioteca.error;
 
 /**
- *
- * @author dg
+ * Excepció personalitzada llançada quan es supera el nombre de membres d'un grup.
+ * 
+ * @author David García Rodríguez
  */
 public class LimitDeMembresSuperatException extends Exception{
     public LimitDeMembresSuperatException(String message) {

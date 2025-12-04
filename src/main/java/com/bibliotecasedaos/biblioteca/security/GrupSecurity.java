@@ -11,7 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ ** Component de seguretat personalitzat.
  *
+ * Proporciona mètodes per verificar els permisos basats en la lògica de negoci,
+ * com ara si un usuari és l'administrador d'un grup específic.
+ * 
  * @author David García Rodríguez
  */
 @Component("grupSecurity")
@@ -29,6 +33,5 @@ public class GrupSecurity {
         }
 
         return grup.get().getAdministrador().getId().equals(userId);
-    }
-    
+    }   
 }

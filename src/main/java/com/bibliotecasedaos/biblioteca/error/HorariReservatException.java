@@ -5,7 +5,8 @@
 package com.bibliotecasedaos.biblioteca.error;
 
 /**
- *
+ * Excepció personalitzada llançada quan s'intenta realitzar una reserva amb un horari que es troba en un estat "reservat".
+ * 
  * @author David García Rodríguez
  */
 public class HorariReservatException extends Exception{

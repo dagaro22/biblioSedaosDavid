@@ -25,7 +25,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * Entitat que representa un Grup de lectura i els seus membres a la base de dades.
+ * 
  * @author David García Rodríguez
  */
 @Entity

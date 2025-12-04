@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * * Excepció personalitzada llançada quan s'intenta realitzar un préstec amb un exemplar que es troba en un estat "prestat".
+ * Excepció personalitzada llançada quan s'intenta realitzar un préstec amb un exemplar que es troba en un estat "prestat".
  * 
  * @author David García Rodríguez
  */

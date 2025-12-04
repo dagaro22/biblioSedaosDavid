@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
+ * Controlador REST per a la gestió de grups, proporciona els endpoints necessaris.
  * @author David García Rodríguez
  */
 @RequestMapping("/biblioteca/grups")
@@ -44,17 +44,35 @@ public class GrupController {
         this.grupService = grupService;
     }
     
+    /**
+     * Endpoint per obtenir una llista de tots els grups de reserva existents.
+     * @return Una llista amb tots els objectes Grup.
+     */
     @GetMapping("/llistarGrups")
     public List<Grup> findAllGrups() {
         return grupService.findAllGrups();
     }
     
+    /**
+     * Endpoint per crear un nou grup i reservar l'horari associat.
+     * @param grup L'objecte Grup a crear. S'apliquen validacions mitjançant {@code @Valid}.
+     * @return {@code ResponseEntity} amb el grup creat i l'estat HTTP 201 (CREATED).
+     * @throws HorariNotFoundException Si l'horari especificat no existeix.
+     * @throws HorariReservatException Si l'horari ja està ocupat.
+     */
     @PostMapping("/afegirGrup")
     public ResponseEntity<Grup> saveGrup(@Valid @RequestBody Grup grup) throws HorariNotFoundException, HorariReservatException{
         Grup nouGrup = grupService.saveGrup(grup);
         return new ResponseEntity<>(nouGrup, HttpStatus.CREATED);
     }
     
+    /**
+     * Endpoint per eliminar un grup per ID, alliberant l'horari que tenia reservat.
+     * L'usuari ha de tenir l'autoritat 'ADMIN' o l'usuari ha de ser l'administrador del grup.
+     * @param id L'identificador del grup a eliminar.
+     * @return Missatge de confirmació.
+     * @throws GrupNotFoundException Si el grup no existeix.
+     */
     @PreAuthorize("hasAuthority('ADMIN') or @grupSecurity.esAdminDelGrup(#id, authentication.principal.id)")
     @DeleteMapping("/eliminarGrup/{id}")
     public String deleteGrup(@PathVariable Long id) throws GrupNotFoundException {
@@ -62,6 +80,17 @@ public class GrupController {
         return "Grup esborrat";
     }
     
+    /**
+     * Endpoint per afegir un usuari com a membre d'un grup.
+     * L'usuari que fa la petició ha de ser el mateix usuari que s'està afegint.
+     * @param grupId L'identificador del grup.
+     * @param membreId L'identificador de l'usuari que es vol afegir.
+     * @return {@code ResponseEntity} amb el grup actualitzat i l'estat HTTP 200 (OK).
+     * @throws GrupNotFoundException Si el grup no existeix.
+     * @throws UsuariNotFoundException Si l'usuari no existeix.
+     * @throws LimitDeMembresSuperatException Si s'excedeix el màxim de membres.
+     * @throws MembreJaExisteixException Si l'usuari ja és membre del grup.
+     */
     @PreAuthorize("#membreId == authentication.principal.id")
     @PutMapping("/{grupId}/afegirUsuariGrup/{membreId}")
     public ResponseEntity<Grup> afegirMembre(@PathVariable Long grupId, @PathVariable Long membreId) 
@@ -72,6 +101,12 @@ public class GrupController {
         return ResponseEntity.ok(grupActualitzat);
     }
     
+    /**
+     * Endpoint per llistar tots els usuaris que són membres d'un grup específic.
+     * @param grupId L'identificador del grup.
+     * @return {@code ResponseEntity} amb la llista d'usuaris i l'estat HTTP 200 (OK).
+     * @throws GrupNotFoundException Si el grup no existeix.
+     */
     @GetMapping("/llistarUsuarisGrup/{grupId}")
     public ResponseEntity<List<Usuari>> llistarMembres(@PathVariable Long grupId) throws GrupNotFoundException {
         
@@ -79,6 +114,15 @@ public class GrupController {
         return ResponseEntity.ok(membres);
     }
     
+    /**
+     * Endpoint per eliminar un usuari de la llista de membres d'un grup (sortir del grup).
+     * L'usuari ha de tenir l'autoritat 'ADMIN' o l'usuari que fa la petició ha de ser el mateix usuari que s'està eliminant.
+     * @param grupId L'identificador del grup.
+     * @param membreId L'identificador de l'usuari que se'n va del grup.
+     * @return Missatge de confirmació.
+     * @throws GrupNotFoundException Si el grup no existeix.
+     * @throws UsuariNotFoundException Si l'usuari no es troba dins del grup.
+     */
     @PreAuthorize("hasAuthority('ADMIN') or #membreId == authentication.principal.id")
     @DeleteMapping("/{grupId}/sortirUsuari/{membreId}")
     public String eliminarUsuariDeGrup(@PathVariable Long grupId, @PathVariable Long membreId) throws GrupNotFoundException, UsuariNotFoundException {
